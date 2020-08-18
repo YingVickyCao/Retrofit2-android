@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+<!--    <domain-config cleartextTrafficPermitted="true">-->
+<!--        <domain includeSubdomains="true">gitee.com</domain>-->
+<!--        <pin-set expiration="2020-03-16">-->
+<!--            <pin digest="SHA-256">i6zSAujxX6KALeLg5tcKnvOIn+PsoUXIgED2TG3QYJg=</pin>-->
+<!--        </pin-set>-->
+<!--    </domain-config>-->
+
+    <!--    <domain-config cleartextTrafficPermitted="true">-->
+    <!--        <domain includeSubdomains="true">gitee.com</domain>-->
+    <!--    </domain-config>-->
+</network-security-config>
