@@ -1,0 +1,3 @@
+[submodule "JavaLib"]
+	path = JavaLib
+	url = git@gitee.com:YingVickyCao/JavaLib.git

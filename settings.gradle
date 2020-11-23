@@ -1,2 +1,4 @@
+include ':network-security-configure'
 rootProject.name='Retrofit2-android'
 include ':app'
+include ':JavaLib'

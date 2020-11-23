@@ -1,5 +1,6 @@
 package com.hades.example.retrofit2.android;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -7,7 +8,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
-import rx.Observable;
 
 public interface IDownloadZipService {
 
@@ -24,4 +24,8 @@ public interface IDownloadZipService {
     @Streaming
     @GET
     Observable<Response<ResponseBody>> downloadFileByUrlRx(@Url String fileUrl);
+
+
+    @GET
+    Observable<Response<ResponseBody>> printReadme(@Url String fileUrl);
 }

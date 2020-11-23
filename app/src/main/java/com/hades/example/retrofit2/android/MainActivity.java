@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hades.retrofit2.R;
+import com.hades.example.java.lib.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -23,6 +25,14 @@ import java.util.zip.ZipInputStream;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,13 +43,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -64,8 +69,11 @@ public class MainActivity extends AppCompatActivity {
     private final String EXAMPLE_URL_4 = "https://gitee.com/YingVickyCao/";
     private final String EXAMPLE_FILE_URL_4 = "ServerMocker/blob/master/full2.zip";
 
-    private final String BASE_URL = EXAMPLE_URL_3;
-    private final String FILE_URL = EXAMPLE_FILE_URL_3;
+    private final String EXAMPLE_URL_5 = "https://gitee.com/YingVickyCao/";
+    private final String EXAMPLE_FILE_URL_5 = "YingVickyCao.github.io/raw/master/README.md";
+
+    private final String BASE_URL = EXAMPLE_URL_5;
+    private final String FILE_URL = EXAMPLE_FILE_URL_5;
 
     private final String FILE_NAME = "full.zip";
 
@@ -85,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.download_zip_rxjava).setOnClickListener(view -> downloadZipFileRx());
         findViewById(R.id.checkUrl).setOnClickListener(view -> checkUrl());
         findViewById(R.id.checkZipSize).setOnClickListener(view -> checkZipSize());
+        findViewById(R.id.printReadme).setOnClickListener(view -> printReadme());
+        findViewById(R.id.test).setOnClickListener(view -> test());
 
         mDownloadProgress = new IDownloadProgress() {
             @Override
@@ -99,25 +109,48 @@ public class MainActivity extends AppCompatActivity {
         IDownloadZipService downloadService = createService(IDownloadZipService.class, BASE_URL, mDownloadProgress);
         downloadService.downloadFileByUrlRx(FILE_URL)
                 .flatMap(processDownload())
-//                .flatMap(unpackZip())
+                .flatMap(unpackZip())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(handleResult());
+                .subscribe(new io.reactivex.Observer<File>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull File file) {
+                        Log.d(TAG, "File downloaded and extracted to " + file.getAbsolutePath());
+                        hideProgressBar();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        hideProgressBar();
+                        e.printStackTrace();
+                        Log.d(TAG, "Error " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onCompleted");
+                    }
+                });
     }
 
-    private Func1<Response<ResponseBody>, Observable<File>> processDownload() {
-        return new Func1<Response<ResponseBody>, Observable<File>>() {
+    private Function<Response<ResponseBody>, Observable<File>> processDownload() {
+        return new Function<Response<ResponseBody>, Observable<File>>() {
             @Override
-            public Observable<File> call(Response<ResponseBody> responseBodyResponse) {
+            public Observable<File> apply(@NonNull Response<ResponseBody> responseBodyResponse) throws Exception {
                 return saveToDiskRx(responseBodyResponse);
             }
         };
     }
 
-    private Func1<File, Observable<File>> unpackZip() {
-        return new Func1<File, Observable<File>>() {
+    private Function<File, Observable<File>> unpackZip() {
+        return new Function<File, Observable<File>>() {
             @Override
-            public Observable<File> call(File file) {
+            public Observable<File> apply(File file) {
                 InputStream is;
                 ZipInputStream zis;
                 String parentFolder;
@@ -158,28 +191,6 @@ public class MainActivity extends AppCompatActivity {
                 File extractedFile = new File(file.getAbsolutePath().replace(".zip", ""));
                 if (!file.delete()) Log.d("unpackZip", "Failed to deleted the zip file.");
                 return Observable.just(extractedFile);
-            }
-        };
-    }
-
-    private Observer<File> handleResult() {
-        return new Observer<File>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG, "onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                hideProgressBar();
-                e.printStackTrace();
-                Log.d(TAG, "Error " + e.getMessage());
-            }
-
-            @Override
-            public void onNext(File file) {
-                Log.d(TAG, "File downloaded and extracted to " + file.getAbsolutePath());
-                hideProgressBar();
             }
         };
     }
@@ -294,19 +305,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Observable<File> saveToDiskRx(final Response<ResponseBody> response) {
-        return Observable.create(new Observable.OnSubscribe<File>() {
+        return Observable.create(new ObservableOnSubscribe<File>() {
             @Override
-            public void call(Subscriber<? super File> subscriber) {
+            public void subscribe(@NonNull ObservableEmitter<File> emitter) throws Exception {
                 try {
                     File destinationFile = setDestinationFilePath(FILE_NAME);
                     BufferedSink bufferedSink = Okio.buffer(Okio.sink(destinationFile));
                     bufferedSink.writeAll(response.body().source());
                     bufferedSink.close();
-                    subscriber.onNext(destinationFile);
-                    subscriber.onCompleted();
+                    emitter.onNext(destinationFile);
+                    emitter.onComplete();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    subscriber.onError(e);
+                    emitter.onError(e);
                 }
             }
         });
@@ -317,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 .client(createOkHttpClient(callback))
 //                .client(new OkHttpClient())
                 .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit.create(serviceClass);
     }
@@ -399,9 +410,42 @@ public class MainActivity extends AppCompatActivity {
                         response.close();
                     }
                 }
-
-
             }
         }).start();
+    }
+
+    private void printReadme() {
+        showProgressBar();
+        IDownloadZipService downloadService = createService(IDownloadZipService.class, BASE_URL, mDownloadProgress);
+        downloadService.printReadme(EXAMPLE_URL_5 + EXAMPLE_FILE_URL_5)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Response<ResponseBody>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Response<ResponseBody> responseBodyResponse) {
+                        Log.d(TAG, "onNext: " + responseBodyResponse.toString());
+                        String result = new FileUtils().convertStreamToStr(responseBodyResponse.body().byteStream());
+                        Log.d(TAG, "onNext: ");
+                        Log.d(TAG, "printReadme:onNext: " + result);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.e(TAG, "onError: ", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void test() {
     }
 }

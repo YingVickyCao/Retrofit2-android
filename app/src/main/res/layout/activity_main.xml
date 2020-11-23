@@ -47,13 +47,25 @@
             android:id="@+id/checkUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="URL" />
+            android:text="Check URL" />
 
         <Button
             android:id="@+id/checkZipSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Zip size" />
+
+        <Button
+            android:id="@+id/printReadme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Print Readme" />
+
+        <Button
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test" />
 
     </LinearLayout>
 

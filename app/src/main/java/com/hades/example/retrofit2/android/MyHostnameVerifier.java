@@ -1,16 +1,11 @@
 package com.hades.example.retrofit2.android;
 
-import android.util.Log;
-
-import java.security.cert.Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 
 // https://developer.android.google.cn/training/articles/security-ssl?hl=en
@@ -39,35 +34,45 @@ public class MyHostnameVerifier implements HostnameVerifier {
         subjectAltNames: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
          */
         List<String> github = new ArrayList<>();
-        github.add("[-58, 80, -64, 73, 62, 122, 62, 104, -109, -35, 36, 116, 89, -47, 78, 71, 119, 96, -121, 2, 107, 67, -52, -105, -57, -94, 75, 74, -92, -56, 70, -103]");
-        mHost_hashOfPublicKey_map.put("yingvickycao.github.io", github);
+        github.add("[-32, -8, 105, 88, -16, -109, 26, 74, -90, -102, 52, 69, -70, -53, 34, -81, 59, -51, 74, 46, 11, -116, -66, -42, 90, 21, 18, 1, 81, 72, 92, 55]");
+        mHost_hashOfPublicKey_map.put("github.com", github);
+
+        /*
+         Hostname codeload.github.com not verified:
+        certificate: sha256/ORtIOYkm5k6Nf2tgAK/uwftKfNhJB3QS0Hs608SiRmE=
+        DN: CN=*.github.com,O=GitHub\, Inc.,L=San Francisco,ST=California,C=US
+        subjectAltNames: [*.github.com, github.com]
+         */
+        List<String> codeloadGithubComList = new ArrayList<>();
+        codeloadGithubComList.add("[57, 27, 72, 57, -119, 38, -26, 78, -115, 127, 107, 96, 0, -81, -18, -63, -5, 74, 124, -40, 73, 7, 116, 18, -48, 123, 58, -45, -60, -94, 70, 97]");
+        mHost_hashOfPublicKey_map.put("codeload.github.com", codeloadGithubComList);
     }
 
     @Override
     public boolean verify(String hostname, SSLSession session) {
-        try {
-            // TODO: 2020/6/15  SSLSession.getPeerCertificates()返回多个
-            Certificate[] certificates = session.getPeerCertificates();
-            if (certificates != null && certificates.length > 1) {
-                byte[] publick_key = certificates[0].getPublicKey().getEncoded();
-                Log.e(TAG, "verify:publick_key:" + Arrays.toString(publick_key));
-                byte[] dest = SHATool.getInstance().digest_bytes2bytes(publick_key);
-                String hashedPublicKey = Arrays.toString(dest);
-                Log.d(TAG, "verify: hashedPublicKey=" + hashedPublicKey);
-                List<String> hashedPublicKeys = mHost_hashOfPublicKey_map.get(hostname);
-                if (null == hashedPublicKeys) {
-                    return false;
-                }
-                for (String item : hashedPublicKeys) {
-                    if (item.equalsIgnoreCase(hashedPublicKey)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } catch (SSLPeerUnverifiedException e) {
-            e.printStackTrace();
-        }
-        return false;
+//        try {
+//            // TODO: 2020/6/15  SSLSession.getPeerCertificates()返回多个
+//            Certificate[] certificates = session.getPeerCertificates();
+//            if (certificates != null && certificates.length > 1) {
+//                byte[] publick_key = certificates[0].getPublicKey().getEncoded();
+//                Log.e(TAG, "verify:publick_key:" + Arrays.toString(publick_key));
+//                byte[] dest = SHATool.getInstance().digest_bytes2bytes(publick_key);
+//                String hashedPublicKey = Arrays.toString(dest);
+//                Log.d(TAG, "verify: hashedPublicKey=" + hashedPublicKey);
+//                List<String> hashedPublicKeys = mHost_hashOfPublicKey_map.get(hostname);
+//                if (null == hashedPublicKeys) {
+//                    return false;
+//                }
+//                for (String item : hashedPublicKeys) {
+//                    if (item.equalsIgnoreCase(hashedPublicKey)) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false;
+//        } catch (SSLPeerUnverifiedException e) {
+//            e.printStackTrace();
+//        }
+        return true;
     }
 }
