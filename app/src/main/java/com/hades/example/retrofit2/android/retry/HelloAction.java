@@ -26,18 +26,17 @@ public class HelloAction {
 
     public synchronized Observable<String> hello() {
         return mService.hello()
-                .repeat(2)
                 .subscribeOn(Schedulers.io())
                 .delay(3, TimeUnit.SECONDS)
                 .flatMap(new Function<Response<String>, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(@NonNull Response<String> response) throws Exception {
                         String s = response.body();
-                        if (null != s && !s.isEmpty()) {
-                            Log.d(TAG, "hello,apply:result.onNext " + response.body());
-                            Log.d(TAG, "hello,apply:thread name:" + Thread.currentThread().getName() + ",thread id:" + Thread.currentThread().getId());
-                            return Observable.just(s);
-                        }
+                        Log.d(TAG, "hello,apply:thread name:" + Thread.currentThread().getName() + ",thread id:" + Thread.currentThread().getId());
+//                        if (null != s && !s.isEmpty()) {
+//                            Log.d(TAG, "hello,apply:result.onNext " + response.body());
+//                            return Observable.just(s);
+//                        }
                         return Observable.just(null);
                     }
                 });

@@ -54,12 +54,13 @@ public class RetryActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d(TAG, "onError: ");
+                        Log.d(TAG, "onError: " + e.getMessage());
                         hideProgressBar();
                     }
 
                     @Override
                     public void onComplete() {
+                        Log.d(TAG, "onComplete: ");
                     }
                 });
 
