@@ -5,7 +5,7 @@
         <domain includeSubdomains="true">github.com</domain>
         <domain includeSubdomains="true">*.gitee.com</domain>
         <trust-anchors>
-            <certificates src="@raw/charles_ssl_proxying_certificate"/>
+            <certificates src="@raw/charles_ssl_proxying_certificate" />
         </trust-anchors>
     </domain-config>
 </network-security-config>
