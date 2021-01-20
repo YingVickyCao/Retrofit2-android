@@ -25,15 +25,14 @@ public class RetryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_retry);
+        setContentView(R.layout.activity_disposable);
 
         mProgressBar = findViewById(R.id.progressBar);
 
-        findViewById(R.id.retry).setOnClickListener(v -> retry());
-        findViewById(R.id.retryWhen).setOnClickListener(v -> retryWhen());
+        findViewById(R.id.disposable).setOnClickListener(v -> disposable());
     }
 
-    private synchronized void retry() {
+    private synchronized void disposable() {
         Log.d(TAG, "retry: ");
         showProgressBar();
         helloController.hello()
@@ -77,14 +76,6 @@ public class RetryActivity extends AppCompatActivity {
 
     private void download() {
         Log.d(TAG, "download: ");
-    }
-
-    private void retryWhen() {
-
-    }
-
-    private void retryUntil() {
-
     }
 
     private void showProgressBar() {

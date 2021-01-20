@@ -1,4 +1,4 @@
-package com.hades.example.retrofit2.android;
+package com.hades.example.retrofit2.android.downloadzip;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hades.example.java.lib.FileUtils;
+import com.hades.example.retrofit2.android.R;
 
 import java.io.BufferedInputStream;
 import java.io.File;

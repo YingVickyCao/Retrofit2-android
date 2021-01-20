@@ -1,4 +1,4 @@
-package com.hades.example.retrofit2.android;
+package com.hades.example.retrofit2.android.downloadzip;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;

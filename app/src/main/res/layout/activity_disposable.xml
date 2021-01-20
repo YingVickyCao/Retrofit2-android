@@ -14,24 +14,10 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/retry"
+            android:id="@+id/disposable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retry"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/retryWhen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="retryWhen"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/retryUntil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="retryUntil"
+            android:text="Disposable"
             android:textAllCaps="false" />
     </LinearLayout>
 

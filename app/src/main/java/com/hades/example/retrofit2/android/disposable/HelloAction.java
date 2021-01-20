@@ -2,8 +2,8 @@ package com.hades.example.retrofit2.android.disposable;
 
 import android.util.Log;
 
-import com.hades.example.retrofit2.android.ILocalService;
-import com.hades.example.retrofit2.android.ServiceUtils;
+import com.hades.example.retrofit2.android.downloadzip.ILocalService;
+import com.hades.example.retrofit2.android.downloadzip.ServiceUtils;
 
 import java.util.concurrent.TimeUnit;
 

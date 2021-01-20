@@ -2,8 +2,8 @@ package com.hades.example.retrofit2.android.disposable2;
 
 import android.util.Log;
 
-import com.hades.example.retrofit2.android.ILocalService;
-import com.hades.example.retrofit2.android.ServiceUtils;
+import com.hades.example.retrofit2.android.downloadzip.ILocalService;
+import com.hades.example.retrofit2.android.downloadzip.ServiceUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
