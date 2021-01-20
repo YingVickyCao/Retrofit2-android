@@ -1,4 +1,4 @@
-package com.hades.example.retrofit2.android.retry;
+package com.hades.example.retrofit2.android.disposable;
 
 import android.os.Bundle;
 import android.util.Log;

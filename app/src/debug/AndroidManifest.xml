@@ -4,7 +4,7 @@
     package="com.hades.example.retrofit2.android">
 
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".retry.RetryActivity">
+        <activity android:name=".disposable.RetryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

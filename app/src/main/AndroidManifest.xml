@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.hades.example.retrofit2.android.retry2.Retry2Activity" />
-        <activity android:name=".retry.RetryActivity"/>
+        <activity android:name="com.hades.example.retrofit2.android.disposable2.Retry2Activity" />
+        <activity android:name=".disposable.RetryActivity"/>
     </application>
 
 </manifest>
