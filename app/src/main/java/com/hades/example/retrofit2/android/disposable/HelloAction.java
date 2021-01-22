@@ -17,7 +17,7 @@ import retrofit2.Response;
 public class HelloAction {
     private static final String TAG = HelloAction.class.getSimpleName();
 
-    private final String BASE_URL = "http://192.168.8.100:7777/";
+    private final String BASE_URL = "http://10.0.2.2:7777/";
     private final ILocalService mService;
 
     public HelloAction() {
@@ -37,7 +37,7 @@ public class HelloAction {
 //                            Log.d(TAG, "hello,apply:result.onNext " + response.body());
 //                            return Observable.just(s);
 //                        }
-                        return Observable.just(null);
+                        return Observable.error(new Exception("response is invalid"));
                     }
                 });
     }
